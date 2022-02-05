@@ -22,7 +22,7 @@ Content Table
 - Player ✔️
 - Player movement ✔️
 - Collision ✔️
-- Camera
+- Camera ✔️
 - Enemies
 - Enemy AI
 - Damage system
