@@ -7,6 +7,7 @@ Content Table
    * [About](#about)
    * [Features](#features)
    * [Installation](#instalation)
+   * [Fixes](#fixes)
    * [Status](#status)
 <!--te-->
 
@@ -45,6 +46,10 @@ $ python code/main.py
 ```
 or go to the code directory and run main.py with python{version}
 <br />
+
+<a name="fixes">**Fixes**</a><br />
+- Tiles hitboxes
+- Player hitbox
 
 <a name="status">**Status**</a>
 <h4 align="left"> 
