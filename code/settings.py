@@ -38,6 +38,7 @@ magic_data = {
     'heal': {'strength': 20, 'cost': 10, 'graphic': '../graphics/particles/heal/heal.png'},
     'wind': {'strength': 10, 'cost': 30, 'graphic': '../graphics/particles/wind/wind.png'},
     'ice': {'strength': 8, 'cost': 15, 'graphic': '../graphics/particles/ice/ice.png'},
+    'thunderball': {'strength': 15, 'cost': 25, 'graphic': '../graphics/particles/thunderball/thunderball.png'},
 }
 
 # enemy

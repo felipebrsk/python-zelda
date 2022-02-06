@@ -13,6 +13,7 @@ class AnimationPlayer:
             'heal': import_folder('../graphics/particles/heal/frames'),
             'wind': import_folder('../graphics/particles/wind/frames'),
             'ice': import_folder('../graphics/particles/ice/frames'),
+            'thunderball': import_folder('../graphics/particles/thunderball/frames'),
 
             # attacks
             'claw': import_folder('../graphics/particles/claw'),

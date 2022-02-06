@@ -97,6 +97,8 @@ class Level:
             self.magic_player.wind(self.player, cost, [self.visible_sprites, self.attack_sprites])
         if style == 'ice':
             self.magic_player.ice(self.player, cost, [self.visible_sprites, self.attack_sprites])
+        if style == 'thunderball':
+            self.magic_player.thunderball(self.player, cost, [self.visible_sprites, self.attack_sprites])
 
     def destroy_attack(self):
         if self.current_attack:
