@@ -25,8 +25,8 @@ Content Table
 - Collision ✔️
 - Camera ✔️
 - Mapping system ✔️
-- Enemies
-- Enemy AI
+- Enemies ✔️
+- Enemy AI ✔️
 - Damage system
 - Weapons system ✔️
 - Health, energy, experience, weapons, magic UI ✔
