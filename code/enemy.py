@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-	def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player):
+	def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player, trigger_death_particles):
 
 		# general setup
 		super().__init__(groups)
@@ -17,8 +17,8 @@ class Enemy(Entity):
 		self.image = self.animations[self.status][self.frame_index]
 
 		# movement
-		self.rect = self.image.get_rect(topleft = pos)
-		self.hitbox = self.rect.inflate(0,-10)
+		self.rect = self.image.get_rect(topleft=pos)
+		self.hitbox = self.rect.inflate(0, -10)
 		self.obstacle_sprites = obstacle_sprites
 
 		# stats
@@ -38,6 +38,7 @@ class Enemy(Entity):
 		self.attack_time = None
 		self.attack_cooldown = 400
 		self.damage_player = damage_player
+		self.trigger_death_particles = trigger_death_particles
 
 		# invincibility timer
 		self.vulnerable = True
@@ -93,7 +94,7 @@ class Enemy(Entity):
 			self.frame_index = 0
 
 		self.image = animation[int(self.frame_index)]
-		self.rect = self.image.get_rect(center = self.hitbox.center)
+		self.rect = self.image.get_rect(center=self.hitbox.center)
 
 		if not self.vulnerable:
 			alpha = self.wave_value()
@@ -124,6 +125,7 @@ class Enemy(Entity):
 	def check_death(self):
 		if self.health <= 0:
 			self.kill()
+			self.trigger_death_particles(self.rect.center, self.monster_name)
 
 	def hit_reaction(self):
 		if not self.vulnerable:

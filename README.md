@@ -57,6 +57,7 @@ or go to the code directory and run main.py with python{version}
 - Tiles hitboxes ✔️
 - Player hitbox ✔️
 - Player behind sortable tiles ✔️
+- Player attacks happens more than once
 
 <a name="status">**Status**</a>
 <h4 align="left"> 
