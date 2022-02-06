@@ -29,6 +29,7 @@ Content Table
 - Enemy AI
 - Damage system
 - Weapons system ✔️
+- Health, energy, experience, weapons, magic UI ✔
 - ...
 
 <a name="instalation">**Installation**</a><br />
