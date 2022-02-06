@@ -31,8 +31,8 @@ Content Table
 - Weapons system ✔️
 - Health, energy, experience, weapons, magic UI ✔️
 - Player/enemy flicker ✔️
-- Particles
-- Spells
+- Particles ✔️
+- Spells (flame, heal) ✔️
 - Upgrade system
 - ...
 
