@@ -24,10 +24,11 @@ Content Table
 - Player movement ✔️
 - Collision ✔️
 - Camera ✔️
+- Mapping system ✔️
 - Enemies
 - Enemy AI
 - Damage system
-- Weapons system
+- Weapons system ✔️
 - ...
 
 <a name="instalation">**Installation**</a><br />
