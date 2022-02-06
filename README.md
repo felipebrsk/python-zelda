@@ -27,9 +27,13 @@ Content Table
 - Mapping system ✔️
 - Enemies ✔️
 - Enemy AI ✔️
-- Damage system
+- Damage system ✔️
 - Weapons system ✔️
-- Health, energy, experience, weapons, magic UI ✔
+- Health, energy, experience, weapons, magic UI ✔️
+- Player/enemy flicker ✔️
+- Particles
+- Spells
+- Upgrade system
 - ...
 
 <a name="instalation">**Installation**</a><br />
