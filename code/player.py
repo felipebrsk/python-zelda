@@ -1,12 +1,15 @@
+import random
 import pygame
 from settings import *
 from support import import_folder
 from entity import Entity
+from pygame import mixer
 
 
 class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic):
         super().__init__(groups)
+        self.animations = None
         self.image = pygame.image.load('../graphics/images/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, -26)
@@ -39,9 +42,11 @@ class Player(Entity):
 
         # stats
         self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'magic': 4, 'speed': 5, 'armor': 2}
+        self.max_stats = {'health': 300, 'energy': 140, 'attack': 20, 'magic': 10, 'speed': 12, 'armor': 8}
+        self.upgrade_cost = {'health': 100, 'energy': 100, 'attack': 100, 'magic': 100, 'speed': 100, 'armor': 100}
         self.health = self.stats['health']
         self.energy = self.stats['energy']
-        self.exp = 123
+        self.exp = 0
         self.speed = self.stats['speed']
         self.armor = self.stats['armor']
 
@@ -102,6 +107,7 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
+                mixer.Sound(random.choice(['../musics/tome.mp3', '../musics/tapa.mp3'])).play()
 
             # magic input
             if keys[pygame.K_k]:
@@ -111,6 +117,7 @@ class Player(Entity):
                 strength = list(magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
                 cost = list(magic_data.values())[self.magic_index]['cost']
                 self.create_magic(style, strength, cost)
+                mixer.Sound(random.choice(['../musics/dançagatinho.mp3'])).play()
 
             if keys[pygame.K_q] and self.can_switch_weapon:
                 self.can_switch_weapon = False
@@ -122,6 +129,7 @@ class Player(Entity):
                     self.weapon_index = 0
 
                 self.weapon = list(weapon_data.keys())[self.weapon_index]
+                mixer.Sound(random.choice(['../musics/ui.mp3', '../musics/demais.mp3', '../musics/elegosta.mp3'])).play()
 
             if keys[pygame.K_e] and self.can_switch_magic:
                 self.can_switch_magic = False
@@ -190,6 +198,12 @@ class Player(Entity):
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
+
+    def get_value_by_index(self, index):
+        return list(self.stats.values())[index]
+
+    def get_cost_by_index(self, index):
+        return list(self.upgrade_cost.values())[index]
 
     def get_full_weapon_damage(self):
         base_damage = self.stats['attack']

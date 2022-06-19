@@ -1,4 +1,7 @@
-import pygame 
+import random
+import time
+
+import pygame
 from settings import *
 from tile import Tile
 from player import Player
@@ -9,6 +12,9 @@ from ui import UI
 from enemy import Enemy
 from particles import AnimationPlayer
 from magic import MagicPlayer
+from pygame import mixer
+from upgrade import Upgrade
+import sys
 
 
 class Level:
@@ -16,6 +22,7 @@ class Level:
         self.player = None
         # get display surface
         self.display_surface = pygame.display.get_surface()
+        self.game_paused = False
 
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -31,6 +38,7 @@ class Level:
 
         # user interface
         self.ui = UI()
+        self.upgrade = Upgrade(self.player)
 
         # particles
         self.animation_player = AnimationPlayer()
@@ -59,7 +67,8 @@ class Level:
                         if style == 'grass':
                             random_grass_image = choice(graphics['grass'])
                             # studying the grass will be an obstacle
-                            Tile((x, y), [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
+                            Tile((x, y), [self.visible_sprites, self.obstacle_sprites, self.attackable_sprites],
+                                 'grass', random_grass_image)
 
                         if style == 'object':
                             surf = graphics['objects'][int(col)]
@@ -68,7 +77,7 @@ class Level:
                         if style == 'entities':
                             if col == '394':
                                 self.player = Player(
-                                    (x,y),
+                                    (x, y),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.create_attack,
@@ -83,7 +92,14 @@ class Level:
                                     monster_name = 'raccoon'
                                 else:
                                     monster_name = 'squid'
-                                Enemy(monster_name, (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacle_sprites, self.damage_player, self.trigger_death_particles)
+                                Enemy(
+                                    monster_name,
+                                    (x, y),
+                                    [self.visible_sprites, self.attackable_sprites],
+                                    self.obstacle_sprites, self.damage_player,
+                                    self.trigger_death_particles,
+                                    self.add_exp
+                                )
 
     def create_attack(self):
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
@@ -120,25 +136,56 @@ class Level:
                         else:
                             target_sprite.get_damage(self.player, attack_sprite.sprite_type)
 
+    def gameOver(self):
+        gameOverFont = pygame.font.Font('freesansbold.ttf', 72)
+        gameOverSurf = gameOverFont.render('Game Over', True, pygame.Color(0, 0, 0))
+        gameOverRect = gameOverSurf.get_rect()
+        gameOverRect.midtop = (1000, 500)
+        self.display_surface.blit(gameOverSurf, gameOverRect)
+        pygame.display.flip()
+        mixer.music.load('../musics/tumalaca.mp3')
+        mixer.music.set_volume(1)
+        mixer.music.play(-1)
+        mixer.Sound('../musics/xi.mp3').play()
+        time.sleep(2)
+        mixer.Sound('../musics/papelão.mp3').play()
+        time.sleep(19.42)
+        pygame.quit()
+        sys.exit()
+
     def damage_player(self, amount, attack_type):
         if self.player.vulnerable:
             self.player.health -= amount / self.player.armor
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
+            if self.player.health >= 0:
+                mixer.Sound(random.choice(['../musics/brincadeira.mp3', '../musics/tambor.mp3'])).play().set_volume(0.3)
 
             # spawn particles
             self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
+            if self.player.health <= 0:
+                self.gameOver()
+
     def trigger_death_particles(self, pos, particle_type):
         self.animation_player.create_particles(particle_type, pos, [self.visible_sprites])
+
+    def add_exp(self, amount):
+        self.player.exp += amount
+
+    def toggle_menu(self):
+        self.game_paused = not self.game_paused
 
     def run(self):
         # update and draw the game
         self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
-        self.visible_sprites.enemy_update(self.player)
-        self.player_attack_logic()
         self.ui.display(self.player)
+        if self.game_paused:
+            self.upgrade.display()
+        else:
+            self.visible_sprites.update()
+            self.visible_sprites.enemy_update(self.player)
+            self.player_attack_logic()
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -152,7 +199,6 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
-
         # getting the offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
@@ -167,6 +213,7 @@ class YSortCameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
 
     def enemy_update(self, player):
-        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
+        enemy_sprites = [sprite for sprite in self.sprites() if
+                         hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:
             enemy.enemy_update(player)
